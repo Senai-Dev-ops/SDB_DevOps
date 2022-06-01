@@ -3,84 +3,64 @@ services:
   # DATABASE
   database:
     build:
-      #context: https://github.com/Senai-Dev-ops/SDB_Database.git#main
-      # Source (git repository)
-      context: https://github.com/Senai-Dev-ops/Litmus-DB.git#main
-      # Dockerfile path
+      context: ./SDB_Database
       dockerfile: db.Dockerfile
-      args:
-        - GIT_COMMIT=382efef
-    # 'sdb_db' means 'SENAI Dashboard database'
     image: sdb_db:1.0.0
     container_name: sdb_db
     command: --default-authentication-plugin=mysql_native_password
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: passwd
-      MYSQL_USER: backend
-      MYSQL_PASSWORD: passwd
-    volumes:
-      - /var/lib/mysql/sdb_db:/var/lib/mysql/
+    #volumes:
+      #- /var/lib/mysql/sdb_db:/var/lib/mysql/
     ports:
-      - "127.0.0.1:30306:3306"
+      - "30306:3306"
     expose:
       - "30306"
     networks:
-      - sdb
+      - db_be
   # BACKEND
   backend:
     build:
-      #context: https://github.com/Senai-Dev-ops/SDB_Backend.git#main
-      context: ./Litmus-Back
+      context: ./SDB_Backend
       dockerfile: be.Dockerfile
-      args:
-        - GIT_COMMIT=f493887
     # 'sdb_be' means 'SENAI Dashboard backend'
     image: sdb_be:1.0.0
     container_name: sdb_be
     restart: always
-    volumes:
-      - /usr/src/sdb_be:/usr/src/sdb_be
+    command: node src/index.js
+    #volumes:
+      #- /usr/src/sdb_be:/usr/src/sdb_be
     ports:
-      - "127.0.0.1:4000:4000"
+      - "4000:4000"
     expose:
       - "4000"
     # List the containers that backend depends on
     depends_on:
       - database
     networks:
-      - sdb
-networks:
-  sdb: 
-    driver: bridge
-
-
-
-
-
-
-
-
+      - db_be
   # FRONTEND
   frontend:
     build:
-      #context: https://github.com/Senai-Dev-ops/SDB_Frontend.git
-      context: https://github.com/Senai-Dev-ops/Litmus-SENAI.git
+      context: ./SDB_Frontend
       dockerfile: fe.Dockerfile
-      args:
-        - GIT_COMMIT=8d4188d
     # 'sdb_fe' means 'SENAI Dashboard frontend'
-    image: sdb_fe
+    image: sdb_fe:1.0.0
     container_name: sdb_fe
     restart: always
-    volumes:
-      - /var/www/html/:/var/www/html/
+    command: service nginx start
+    #volumes:
+      #- /var/www/html/:/var/www/html/
     ports:
       - "80:80"
     # List the containers that backend depends on
     depends_on:
       - database
       - backend
+networks:
+  # database <-> backend
+  db_be: 
+    driver: bridge
+
 
 # TO DEPLOY:
 # ON THIS DIRECTORY, RUN "docker compose up -d"
