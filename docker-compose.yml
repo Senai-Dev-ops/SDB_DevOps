@@ -47,7 +47,6 @@ services:
     image: sdb_fe:1.0.0
     container_name: sdb_fe
     restart: always
-    command: service nginx start
     #volumes:
       #- /var/www/html/:/var/www/html/
     ports:
@@ -70,6 +69,3 @@ networks:
 # References:
 # BUILDING: https://docs.docker.com/compose/compose-file/build/
 # DOCKER-COMPOSE SCOPE: https://www.youtube.com/watch?v=HxPz3eLnXZk
-
-
-# Connection (?) https://pt.stackoverflow.com/questions/445800/erro-de-conex%C3%A3o-node-e-mysql-no-docker-compose-error-connect-econnrefused
