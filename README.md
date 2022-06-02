@@ -1,5 +1,25 @@
 # SDB_DevOps
 ## Deploy
+Important: we used Ubuntu Server 20.04 LTS and Docker to host our project. If you only want to test it, virtualize the Ubuntu* and install Docker with the subsequent commands:
+```bash
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get update
+ sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+# From: https://docs.docker.com/engine/install/ubuntu/
+```
+* It's interesting to create a bridged network connection, assuming that you want to access outside the server.
 To deploy, follow these steps:
 ### (I) Get the source code and define the environment variables
 ```bash
@@ -75,7 +95,7 @@ sudo docker compose up -d
 # First access the backend container bash
 sudo docker exec -it sdb_be bash
 # Generate the user running
-npx db:seed:all
+npx sequelize db:seed:all
 # Finally, exit
 exit
 # All done!
