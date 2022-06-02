@@ -3,14 +3,20 @@
 To deploy, follow these steps:
 ### (I) Get the source code and define the environment variables
 ```bash
+# Clone this repository
+git clone https://github.com/Senai-Dev-ops/SDB_DevOps.git
+cd SDB_DevOps
+```
+```bash
 #############################
 # DATABASE                  #
 #############################
-# Inside this repository, clone the database repository
+# Inside the SDB_DevOps, clone the database repository
 git clone https://github.com/Senai-Dev-ops/SDB_Database.git
 # Edit the be.Dockerfile with your favorite text editor, and define the mysql passwords
 cd SDB_Database
 nano db.Dockerfile
+
 cd ..
 ```
 ```bash
@@ -50,16 +56,18 @@ cd ..
 # FRONTEND                  #
 #############################
 # Clone the frontend repository
-git clone https://github.com/Senai-Dev-ops/SDB_Backend.git
+git clone https://github.com/Senai-Dev-ops/SDB_Frontend.git
 ```
 ### (II) Run Docker compose
 By the end of the previous step, you'll have the following directory structure:
+```
 SDB_DevOps
   ├── SDB_Database
   ├── SDB_Backend
   └── SDB_Frontend
+```
   
-To run the docker compose, you must be on "SDB_DevOps" folder, where the docker-compose.yml file is
+Important: to run the docker compose, you must be on "SDB_DevOps" folder, where the docker-compose.yml file is.
 ```bash
 # On "SDB_DevOps" folder
 sudo docker compose up -d
@@ -77,5 +85,3 @@ This project uses the following ports:
 + Frontend: 80
 + Backend: 4000
 + Database: 30306
-
-If yor are accessing the project on the same machine you deployed it, you can access:
