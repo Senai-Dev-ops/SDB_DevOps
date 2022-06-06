@@ -48,7 +48,7 @@ services:
     container_name: sdb_fe
     restart: always
     volumes:
-      - /var/www/html/:/var/www/html/
+      - /var/www/html/sdb_fe:/var/www/html/
     ports:
       - "80:80"
     # List the containers that backend depends on
