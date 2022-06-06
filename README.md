@@ -19,7 +19,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # From: https://docs.docker.com/engine/install/ubuntu/
 ```
-* It's interesting to create a bridged network connection, assuming that you want to access outside the server.
+\* It's interesting to create a bridged network connection, assuming that you want to access the services outside the server.
 To deploy, follow these steps:
 ### (I) Get the source code and define the environment variables
 ```bash
@@ -34,10 +34,7 @@ cd SDB_DevOps
 # Inside the SDB_DevOps, clone the database repository
 git clone https://github.com/Senai-Dev-ops/SDB_Database.git
 # Edit the be.Dockerfile with your favorite text editor, and define the mysql passwords
-cd SDB_Database
-nano db.Dockerfile
-
-cd ..
+nano SDB_Database/db.Dockerfile
 ```
 ```bash
 #############################
@@ -45,10 +42,9 @@ cd ..
 #############################
 # Clone the backend repository
 git clone https://github.com/Senai-Dev-ops/SDB_Backend.git
-cd SDB_Backend
 
 # Create a .env file containing the following information (do not forget to edit before executing):
-cat > .env << EOF
+cat > SDB_Backend/.env << EOF
 # Seting project to run as production
 NODE_ENV=production
 # User for the backend access securely the database
@@ -68,8 +64,6 @@ DEFAULT_USER_PASS=passwd
 # (ATTENTION) Set here the secret for jwt hash
 SECRET=secret
 EOF
-
-cd ..
 ```
 ```bash
 #############################
@@ -77,6 +71,10 @@ cd ..
 #############################
 # Clone the frontend repository
 git clone https://github.com/Senai-Dev-ops/SDB_Frontend.git
+
+# Edit the conf.js file, replacing the URL with your server's IP
+# More precisely, replace the "localhost" with the IP
+nano SDB_Frontend/src/config.js
 ```
 ### (II) Run Docker compose
 By the end of the previous step, you'll have the following directory structure:
@@ -86,6 +84,18 @@ SDB_DevOps
   ├── SDB_Backend
   └── SDB_Frontend
 ```
+The files marked with (*) were edit:
+```
+SDB_DevOps
+  ├── SDB_Database
+  |    └── db.Dockerfile (*)
+  ├── SDB_Backend
+  |    └── .env (*)
+  └── SDB_Frontend
+       └── src
+            └── services
+                 └── index.js (*)
+```
   
 Important: to run the docker compose, you must be on "SDB_DevOps" folder, where the docker-compose.yml file is.
 ```bash
@@ -94,7 +104,7 @@ sudo docker compose up -d
 # If it's the first time you're running the project, you must generate the first admin user by running:
 # First access the backend container bash
 sudo docker exec -it sdb_be bash
-# Generate the user running
+# Generate the user by running
 npx sequelize db:seed:all
 # Finally, exit
 exit
@@ -105,3 +115,8 @@ This project uses the following ports:
 + Frontend: 80
 + Backend: 4000
 + Database: 30306
+
+### Accessing it
+Generally, you can acccess the services, on their respective ports, by typing on browser: **<Your server's IP>:port**
+
+\* Do dot forget to remove the "<>" symbols
